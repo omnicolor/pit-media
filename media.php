@@ -1,4 +1,13 @@
 <?php
+/**
+ * Frontend script for controlling a media player.
+ */
+
+
+/**
+ * Get the volume from a remote player.
+ * @return integer Percent volume the remote server is playing at.
+ */
 function getVolume() {
     exec('ssh pi@192.168.1.87 amixer', $output);
     $volume = array_pop($output);
@@ -6,11 +15,21 @@ function getVolume() {
     return array_pop($matches);
 }
 
+
+/**
+ * Set the volume on the remote player.
+ * @param integer $volume Percentage volume to play at.
+ */
 function setVolume($volume) {
     $volume = escapeshellarg($volume) . '%';
     exec('ssh pi@192.168.1.87 amixer set PCM ' . $volume);
 }
 
+
+/**
+ * Return information about the currently playing song.
+ * @return array ['song', 'artist']
+ */
 function getCurrentSong() {
     $file = file('/tmp/ices.cue');
     return array(
