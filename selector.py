@@ -27,7 +27,7 @@ def ices_get_next ():
 # as metadata (ie for title streaming) for the current song. You may
 # return null to indicate that the file comment should be used.
 def ices_get_metadata ():
-        return 'Artist - Title (Label, Year)'
+        return None
 
 # Function used to put the current line number of
 # the playlist in the cue file. If you don't care about this number
