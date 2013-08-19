@@ -44,8 +44,9 @@ $song = getCurrentSong();
 echo 'Playing: ', $song['song'], ' by ', $song['artist'], '<br>';
 
 if (isset($_GET['volume'])) {
-    setVolume((int)$_GET['volume']);
-    echo 'Volume changed to ', getVolume(), '<br>';
+    $volume = (int)$_GET['volume'];
+    setVolume($volume);
+    echo 'Volume changed to ', $volume, '<br>';
 } elseif (isset($_GET['volumeUp'])) {
     $volume += 10;
     setVolume((int)$volume);
@@ -55,3 +56,5 @@ if (isset($_GET['volume'])) {
     setVolume((int)$volume);
     echo 'Volume changed to ', getVolume(), '<br>';
 }
+?>
+<input type="range" id="volume" min="0" max="100" value="<?php echo $volume; ?>">
