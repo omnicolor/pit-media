@@ -1,0 +1,24 @@
+Web frontend for controlling mplayer on another server
+
+I've got a Raspberry Pi hooked up to my house's sound system. I've mounted my
+music collection on the Pi, and built a playlist. I use mplayer to play the
+playlist, but wanted a way to easily control the volume and current track
+remotely so I wouldn't have to walk to the master closet to fiddle with a knob
+or to my office to mess with the CLI.
+
+Mounting music on the Pi
+
+Use sshfs. I've got ssh keys set up so that running:
+    pi@master$ sshfs media-server:/home/music music
+will mount /home/music on the machine named media-server on the Pi's home
+directory in a new directory called music.
+
+Creating a named pipe to control mplayer
+
+The media player is controlled through a named pipe, which you'll have to
+create.
+    pi@master$ mkfifo ~/mplayer-control
+
+Starting mplayer
+
+    pi@master$ cd music ; mplayer -quiet -slave -input file=~/mplayer-control -shuffle -playlist party.m3u
