@@ -94,6 +94,7 @@ $nowPlaying['song'] = preg_replace('/^\d+ /', '', $nowPlaying['song']);
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta http-equiv="refresh" content="5">
     <title>Media player</title>
 </head>
 
