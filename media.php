@@ -89,6 +89,16 @@ if (isset($_POST['volume'])) {
 
 $nowPlaying = getCurrentSong();
 $nowPlaying['song'] = preg_replace('/^\d+ /', '', $nowPlaying['song']);
+?>
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>Media player</title>
+</head>
+
+<body>
+<?php
 echo 'Playing: ', $nowPlaying['song'], ' by ', $nowPlaying['artist'], '<br>';
 echo 'Current volume: ', $volume, '<br>';
 ?>
@@ -108,3 +118,6 @@ echo 'Current volume: ', $volume, '<br>';
     <button name="action" value="next">Next</button>
 </div>
 </form>
+
+</body>
+</html>
