@@ -27,34 +27,84 @@ function setVolume($volume) {
 
 
 /**
+ * Go to the next song and update the now playing file.
+ */
+function nextSong() {
+    exec('ssh pi@192.168.1.87 \'echo "pausing_keep_force pt_step 1" >> mplayer-control\'');
+    sleep(1);
+    exec('ssh pi@192.168.1.87 ./now-playing.sh');
+}
+
+
+/**
  * Return information about the currently playing song.
  * @return array ['song', 'artist']
  */
 function getCurrentSong() {
-    $file = file('/tmp/ices.cue');
+    exec('ssh pi@192.168.1.87 cat playing.txt', $output);
     return array(
-        'song' => array_pop($file),
-        'artist' => array_pop($file),
+        'artist' => array_shift($output),
+        'album' => array_shift($output),
+        'song' => array_shift($output),
     );
 }
 
-$volume = getVolume();
-echo 'Current volume: ', $volume, '<br>';
-$song = getCurrentSong();
-echo 'Playing: ', $song['song'], ' by ', $song['artist'], '<br>';
 
-if (isset($_GET['volume'])) {
-    $volume = (int)$_GET['volume'];
-    setVolume($volume);
-    echo 'Volume changed to ', $volume, '<br>';
-} elseif (isset($_GET['volumeUp'])) {
-    $volume += 10;
-    setVolume((int)$volume);
-    echo 'Volume changed to ', getVolume(), '<br>';
-} elseif (isset($_GET['volumeDown'])) {
-    $volume -= 10;
-    setVolume((int)$volume);
-    echo 'Volume changed to ', getVolume(), '<br>';
+/**
+ * Toggle muting on or off.
+ * @param boolean $mute Whether to mute or not.
+ */
+function mute($mute) {
+    $mute = (int)$mute;
+    exec('ssh pi@192.168.1.87 echo "mute ' . $mute . '" >> mplayer-control');
 }
+
+
+$volume = getVolume();
+if (isset($_POST['volume'])) {
+    $volume = (int)$_POST['volume'];
+    setVolume($volume);
+} elseif (isset($_POST['action'])) {
+    switch ($_POST['action']) {
+        case 'volumeUp':
+            $volume += 5;
+            setVolume((int)$volume);
+            break;
+        case 'volumeDown':
+            $volume -= 5;
+            setVolume((int)$volume);
+            break;
+        case 'next':
+            nextSong();
+            break;
+        case 'mute':
+            mute(true);
+            break;
+        case 'unmute':
+            mute(false);
+            setVolume(60);
+            break;
+    }
+}
+
+$nowPlaying = getCurrentSong();
+$nowPlaying['song'] = preg_replace('/^\d+ /', '', $nowPlaying['song']);
+echo 'Playing: ', $nowPlaying['song'], ' by ', $nowPlaying['artist'], '<br>';
+echo 'Current volume: ', $volume, '<br>';
 ?>
-<input type="range" id="volume" min="0" max="100" value="<?php echo $volume; ?>">
+<form method="POST">
+<div>
+    <button name="action" value="volumeUp">Vol +</button>
+    <button name="action" value="volumeDown">Vol -</button>
+</div>
+<div>
+    <button name="action" value="mute">Mute</button>
+    <button name="action" value="unmute">Unmute</button>
+</div>
+<div>
+    <button name="volume" value="60">60%</button>
+</div>
+<div>
+    <button name="action" value="next">Next</button>
+</div>
+</form>
