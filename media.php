@@ -43,7 +43,7 @@ function nextSong($pi) {
 /**
  * Return information about the currently playing song.
  * @param string $pi User and host to log in to
- * @return array ['song', 'artist']
+ * @return array ['artist', 'album', 'song']
  */
 function getCurrentSong() {
     exec('ssh pi@192.168.1.87 cat playing.txt', $output);
