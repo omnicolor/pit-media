@@ -52,3 +52,5 @@ script every five seconds so the now playing display is relatively recent.
 Finally, put media.php in a web directory that can run PHP scripts and set the
 IP address for the Pi. You'll want to have SSH keys set up for it to log in
 unattended.
+
+Released under the Apache 2.0 license.
